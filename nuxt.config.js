@@ -15,6 +15,9 @@ export default {
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
+    "~layouts/global.scss",
+    "~assets/variables.scss",
+    '@mdi/font/css/materialdesignicons.min.css'
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
@@ -38,6 +41,8 @@ export default {
     '@nuxtjs/axios',
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
+    '@nuxtjs/style-resources',
+    // 'nuxt-material-design-icons'
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -61,6 +66,10 @@ export default {
     vueI18n: {
       fallbackLocale: 'en'
     }
+  },
+
+  styleResources: {
+    scss: ['./assets/*.scss']
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
