@@ -5,9 +5,10 @@ export default {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      { hid: 'og-title', property: 'og:title', content: 'ASCLEPIUS - ASL TO ENGLISH' },
       { hid: 'og-desc', property: 'og:description', content: 'Easily communicate with person having hearing or speech disability.' },
       { name: 'format-detection', content: 'telephone=no' },
-      { hid: 'og-image', property: 'og:image', content: '/logo.png' },
+      { hid: 'og-image', property: 'og:image', content: 'https://asclepius.krissada.com/logo.png' },
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
