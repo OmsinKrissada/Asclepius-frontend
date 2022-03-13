@@ -1,12 +1,13 @@
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'Asclepius-frontend',
+    title: 'ASCLEPIUS',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' },
-      { name: 'format-detection', content: 'telephone=no' }
+      { hid: 'og-desc', property: 'og:description', content: 'Easily communicate with person having hearing or speech disability.' },
+      { name: 'format-detection', content: 'telephone=no' },
+      { hid: 'og-image', property: 'og:image', content: '/logo.png' },
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
