@@ -12,7 +12,7 @@
     "lintfix": "yarn lint:js --fix"
   },
   "dependencies": {
-    "@mdi/font": "^6.5.95",
+    "@mdi/font": "^6.6.95",
     "@mediapipe/camera_utils": "^0.3.1640029074",
     "@mediapipe/drawing_utils": "^0.3.1620248257",
     "@mediapipe/holistic": "^0.5.1635989137",
