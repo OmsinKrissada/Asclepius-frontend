@@ -18,5 +18,6 @@ module.exports = {
     'comma-dangle': 'off',
     'vue/multi-word-component-names': 'off',
     'no-trailing-spaces': 'off',
+    'node/handle-callback-err': 'off',
   }
 };

@@ -11,7 +11,12 @@ export default {
       { hid: 'og-image', property: 'og:image', content: 'https://asclepius.krissada.com/logo.png' },
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+      { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: true },
+      { href: 'https://fonts.googleapis.com/css2?family=Krub&display=swap', rel: 'stylesheet' },
+      { href: 'https://fonts.googleapis.com/css2?family=mitr&display=swap', rel: 'stylesheet' },
+      { href: 'ttps://fonts.googleapis.com/css2?family=Fahkwang&display=swap', rel: 'stylesheet' },
     ]
   },
 

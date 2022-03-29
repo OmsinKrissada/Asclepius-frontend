@@ -3,7 +3,7 @@
     <div v-if="loading" class="flex flex-col justify-center items-center absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
       <LoadingBar :loading="true" class="m-5" />
       <p class="font-mitr text-lg">
-        Loading  . . .
+        {{ text }}
       </p>
     </div>
     <video ref="input_video" class="input_video selfie hidden" />
@@ -41,17 +41,26 @@ import {
   lerp
 } from '@mediapipe/drawing_utils'
 
+import { io } from 'socket.io-client'
+const socket = io('ws://localhost:8081')
+
 export default Vue.extend({
   name: 'Canvas',
   data () {
     return {
-      loading: true
+      loading: true,
+      text: 'Loading  . . .',
+      camera: null as Camera | null,
+      started: false
     };
   },
-  mounted () {
+  async mounted () {
+    socket.emit('hand', 'mounted')
     const videoElement = this.$refs.input_video as HTMLVideoElement
     const canvasElement = this.$refs.output_canvas as HTMLCanvasElement
     const canvasCtx = canvasElement.getContext('2d')
+
+    let loading = this.loading
 
     function onResults (results: Results) {
       if (canvasCtx === null) {
@@ -68,6 +77,8 @@ export default Vue.extend({
         canvasElement.width,
         canvasElement.height
       )
+
+      loading = false
 
       // Only overwrite existing pixels.
       //   if (activeEffect === "mask" || activeEffect === "both") {
@@ -189,14 +200,31 @@ export default Vue.extend({
     })
     holistic.onResults(onResults)
 
-    const camera = new Camera(videoElement, {
+    this.camera = new Camera(videoElement, {
       onFrame: async () => {
         await holistic.send({ image: videoElement })
       },
       width: 700,
       height: 700
     })
-    // camera.start()
+
+    console.log(this.camera);
+
+    // this.loading = false;
+    try {
+      await this.camera.start()
+      console.log('started')
+    } catch (err) {
+      this.text = 'Unable to start camera'
+      console.log('ohnoooooo');
+      alert('pls dont')
+    }
+  },
+  beforeDestroy () {
+    // if (this.camera) { 
+    console.log(this.loading)
+    // }
   }
+  
 })
 </script>
