@@ -15,18 +15,21 @@
     "@mdi/font": "^6.5.95",
     "@mediapipe/camera_utils": "^0.3.1640029074",
     "@mediapipe/drawing_utils": "^0.3.1620248257",
+    "@mediapipe/hands": "^0.4.1646424915",
     "@mediapipe/holistic": "^0.5.1635989137",
     "@nuxtjs/axios": "^5.13.6",
     "@nuxtjs/i18n": "^7.2.0",
     "@nuxtjs/pwa": "^3.3.5",
     "@nuxtjs/style-resources": "^1.2.1",
+    "@nuxtjs/toast": "^3.3.1",
     "core-js": "^3.19.3",
     "nuxt": "^2.15.8",
     "socket.io-client": "^4.4.1",
     "vue": "^2.6.14",
-    "vue-class-component": "^7.2.6",
+    "vue-property-decorator": "^9.1.2",
     "vue-server-renderer": "^2.6.14",
     "vue-template-compiler": "^2.6.14",
+    "vue-web-cam": "^1.9.0",
     "webpack": "^4.46.0"
   },
   "devDependencies": {
@@ -41,6 +44,7 @@
     "eslint-plugin-vue": "^8.5.0",
     "postcss": "^8.4.4",
     "sass": "^1.49.9",
-    "sass-loader": "10"
+    "sass-loader": "10",
+    "vue-class-component": "^7.2.6"
   }
 }

@@ -49,7 +49,9 @@ export default {
     '@nuxtjs/axios',
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
-    '@nuxtjs/style-resources'
+    '@nuxtjs/style-resources',
+    '@nuxtjs/toast',
+    'vue-web-cam/nuxt'
     // 'nuxt-material-design-icons'
   ],
 
