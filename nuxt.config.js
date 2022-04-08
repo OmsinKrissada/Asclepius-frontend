@@ -51,7 +51,7 @@ export default {
     '@nuxtjs/pwa',
     '@nuxtjs/style-resources',
     '@nuxtjs/toast',
-    'vue-web-cam/nuxt'
+    // 'vue-web-cam/nuxt'
     // 'nuxt-material-design-icons'
   ],
 

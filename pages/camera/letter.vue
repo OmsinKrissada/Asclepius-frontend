@@ -4,6 +4,7 @@
 			<HandCanvas @mh="onMultiHand" @result="onResult" />
 			<div class="text-blue font-bold">
 				<p>Switch language</p>
+				<p v-if="guess_letter">{{ guess_letter }} {{ guess_confidence }}%</p>
 			</div>
 		</div>
 		<div class="m-10">
@@ -19,29 +20,40 @@
 import { Vue, Component } from "vue-property-decorator";
 
 import { io } from "socket.io-client";
-const socket = io("ws://localhost:8081");
 
 @Component
 export default class Camera extends Vue {
 	transcription = "";
+	guess_letter: string | null = null;
+	guess_confidence: number | null = null;
 	// socket: null as SocketIOClient.Socket | null
+	socket = io("ws://localhost:8081");
+
 	mounted() {
-		socket.on("char", (char) => {
+		this.socket.on("char", (char) => {
 			this.transcription += char;
 			console.log(`Received character: ${char}`);
 		});
-		socket.on("word", (word) => {
+		this.socket.on("word", (word) => {
 			this.transcription += " " + word;
 			console.log(`Received word: ${word}`);
+		});
+		this.socket.on("guess", (guess) => {
+			this.guess_letter = guess.letter;
+			this.guess_confidence = guess.confidence;
 		});
 	}
 
 	onResult(result: any) {
-		socket.emit("result", result);
+		this.socket.emit("result", result);
 	}
 
 	onMultiHand(landmarks: string[]) {
-		socket.emit("mh", landmarks);
+		this.socket.emit("mh", landmarks);
+	}
+
+	beforeDestroy() {
+		this.socket.close();
 	}
 }
 </script>
