@@ -6,23 +6,18 @@
 		>
 			<LoadingBar :loading="true" class="m-5" />
 			<p class="font-mitr text-lg">
-				{{ text }}
+				{{ loading_text }}
 			</p>
 		</div>
-		<video ref="input_video" class="input_video selfie hidden" />
-		<canvas
-			ref="output_canvas"
-			class="output_canvas bg-gray-200 rounded-3xl m-0 max-w-full"
-			width="400px"
-			height="400px"
-		/>
+		<video ref="input_video" class="hidden" />
+		<canvas ref="output_canvas" class="bg-gray-200 rounded-3xl m-0 max-w-full" width="400px" height="400px" />
 	</div>
 </template>
 
 <script lang="ts">
 // holistic -> word
 // multihand -> char
-import Vue from "vue";
+import { Vue, Component } from "vue-property-decorator";
 import {
 	Holistic,
 	POSE_CONNECTIONS,
@@ -41,16 +36,13 @@ import {
 import { Camera } from "@mediapipe/camera_utils";
 import { drawLandmarks, drawConnectors, Data, lerp } from "@mediapipe/drawing_utils";
 
-export default Vue.extend({
-	name: "Canvas",
-	data() {
-		return {
-			loading: true,
-			text: "Opening camera . . .",
-			camera: null as Camera | null,
-			started: false,
-		};
-	},
+@Component
+export default class HolisticCanvas extends Vue {
+	loading = true;
+	loading_text = "Initiating . . .";
+	camera = null as Camera | null;
+	started = false;
+
 	async mounted() {
 		const videoElement = this.$refs.input_video as HTMLVideoElement;
 		const canvasElement = this.$refs.output_canvas as HTMLCanvasElement;
@@ -64,17 +56,22 @@ export default Vue.extend({
 
 			canvasCtx.save();
 			canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-			canvasCtx.drawImage(results.segmentationMask, 0, 0, canvasElement.width, canvasElement.height);
+			canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
 
 			vueInstance.loading = false;
 
-			vueInstance.$emit("result", results);
-			if (results.leftHandLandmarks) {
-				vueInstance.$emit("lh", results.leftHandLandmarks);
-			}
-			if (results.rightHandLandmarks) {
-				vueInstance.$emit("rh", results.rightHandLandmarks);
-			}
+			if (
+				results.poseLandmarks &&
+				results.faceLandmarks &&
+				results.leftHandLandmarks &&
+				results.rightHandLandmarks
+			)
+				vueInstance.$emit("holis", {
+					pose: results.poseLandmarks,
+					face: results.faceLandmarks,
+					left: results.leftHandLandmarks,
+					right: results.rightHandLandmarks,
+				});
 
 			// Only overwrite existing pixels.
 			//   if (activeEffect === "mask" || activeEffect === "both") {
@@ -156,7 +153,7 @@ export default Vue.extend({
 			smoothLandmarks: true,
 			enableSegmentation: false,
 			smoothSegmentation: true,
-			refineFaceLandmarks: true,
+			refineFaceLandmarks: false,
 			minDetectionConfidence: 0.5,
 			minTrackingConfidence: 0.5,
 			selfieMode: true,
@@ -171,12 +168,16 @@ export default Vue.extend({
 			height: 700,
 		});
 
+		this.loading_text = "Loading resources . . .";
+		await holistic.initialize();
+
 		try {
+			this.loading_text = "Opening camera . . .";
 			await this.camera.start();
 			console.log("started");
-			this.text = "Loading  . . .";
+			this.loading_text = "Starting . . .";
 		} catch (err) {
-			this.text = "Unable to start camera";
+			this.loading_text = "Cannot open camera";
 			this.$toast.error("Please allow permission to camera", {
 				position: "bottom-right",
 				duration: 5000,
@@ -185,13 +186,13 @@ export default Vue.extend({
 				containerClass: "toast",
 			});
 		}
-	},
+	}
 
 	beforeDestroy() {
 		if (this.camera) {
 			console.log("Destroying camera");
 			this.camera.stop();
 		}
-	},
-});
+	}
+}
 </script>

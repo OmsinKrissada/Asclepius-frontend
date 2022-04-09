@@ -6,9 +6,13 @@
 			<img src="/logo.png" alt="logo" width="300" class="sm:hidden" />
 			<p class="m-3" style="--order: 2">Easily communicate with person having hearing or speech disability.</p>
 			<nuxt-link to="/camera" style="--order: 3">
-				<button class="m-3 px-8 py-3 rounded-full bg-turmeric font-fahkwang text-white">TRANSLATE</button>
+				<button
+					class="m-3 px-8 py-3 rounded-full bg-turmeric font-fahkwang text-white shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]"
+				>
+					TRANSLATE
+				</button>
 			</nuxt-link>
-			<Card text="WebSocket disconnected" />
+			<!-- <Card text="WebSocket disconnected" /> -->
 		</div>
 		<img src="/logo.png" alt="logo" class="hidden sm:block" />
 	</div>

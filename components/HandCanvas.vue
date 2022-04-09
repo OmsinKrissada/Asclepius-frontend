@@ -1,21 +1,16 @@
 <template>
-	<div id="cam-container" class="relative">
+	<div class="relative">
 		<div
 			v-if="loading"
 			class="flex flex-col justify-center items-center absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"
 		>
 			<LoadingBar :loading="true" class="m-5" />
 			<p class="font-mitr text-lg">
-				{{ text }}
+				{{ loading_text }}
 			</p>
 		</div>
-		<video height="500" width="auto" ref="input_video" class="input_video selfie hidden" />
-		<canvas
-			ref="output_canvas"
-			class="output_canvas bg-gray-200 rounded-3xl m-0 max-w-full"
-			width="auto"
-			height="500"
-		/>
+		<video ref="input_video" class="input_video selfie hidden" />
+		<canvas ref="output_canvas" class="output_canvas bg-gray-200 m-0 max-w-full" width="640" height="360" />
 	</div>
 </template>
 
@@ -30,7 +25,7 @@ import { drawLandmarks, drawConnectors, Data, lerp } from "@mediapipe/drawing_ut
 @Component
 export default class HandCanvas extends Vue {
 	loading = true;
-	text = "Opening camera . . .";
+	loading_text = "Initiating . . .";
 	camera = null as Camera | null;
 	started = false;
 
@@ -82,18 +77,19 @@ export default class HandCanvas extends Vue {
 			onFrame: async () => {
 				await hands.send({ image: videoElement });
 			},
-			//   width: 1280,
-			//   height: 720,
+			width: 1280,
+			height: 720,
 		});
 
-		console.log("starting");
-		try {
-			await this.camera.start();
-			console.log("started");
+		this.loading_text = "Loading resources . . .";
+		await hands.initialize();
 
-			this.text = "Loading  . . .";
+		try {
+			this.loading_text = "Opening camera  . . .";
+			await this.camera.start();
+			this.loading_text = "Starting  . . .";
 		} catch (err) {
-			this.text = "Unable to start camera";
+			this.loading_text = "Cannot open camera";
 			this.$toast.error("Please allow permission to camera", {
 				position: "bottom-right",
 				duration: 5000,
