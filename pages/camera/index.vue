@@ -64,7 +64,7 @@ export default class Camera extends Vue {
 		const fullUrl: string = this.$config.wsHost;
 		const protocol = fullUrl.match(/https?:\/\//)?.shift();
 		const [hostname, ...path] = fullUrl.slice(protocol?.length ?? 0).split("/");
-		this.socket = io(`${protocol}${hostname}:${this.$config.wsPort}`, {
+		this.socket = io(`${protocol ?? ""}${hostname ?? ""}:${this.$config.wsPort}`, {
 			path: "/" + (path.join("/") || "socket.io"),
 		});
 		this.socket.on("letter", ({ letter, confidence }) => {
