@@ -26,7 +26,7 @@
 		"core-js": "^3.19.3",
 		"nuxt": "^2.15.8",
 		"socket.io-client": "^4.4.1",
-		"vue": "^2.6.14",
+		"vue": "^3.2.31",
 		"webpack": "^4.46.0"
 	},
 	"devDependencies": {
