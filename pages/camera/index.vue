@@ -57,13 +57,15 @@ export default class Camera extends Vue {
 	latest_letter_prediction = "";
 	latest_word_prediction = "";
 
-	hostParts: string[] = this.$config.wsHost.split("/");
 	socket?: Socket;
 
 	mounted() {
-		console.log(`ws://${this.hostParts[0]}:${this.$config.wsPort}`);
-		this.socket = io(`ws://${this.hostParts[0]}:${this.$config.wsPort}`, {
-			path: "/" + (this.hostParts.slice(1).join("/") || "socket.io"),
+		// console.log(`ws://${this.hostParts[0]}:${this.$config.wsPort}`);
+		const fullUrl: string = this.$config.wsHost;
+		const protocol = fullUrl.match(/https?:\/\//)?.shift();
+		const [hostname, ...path] = fullUrl.slice(protocol?.length ?? 0).split("/");
+		this.socket = io(`${protocol}${hostname}:${this.$config.wsPort}`, {
+			path: "/" + (path.join("/") || "socket.io"),
 		});
 		this.socket.on("letter", ({ letter, confidence }) => {
 			console.log(`Received character: ${letter}`);
