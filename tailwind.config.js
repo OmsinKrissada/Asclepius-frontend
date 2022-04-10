@@ -1,6 +1,4 @@
 module.exports = {
-  purge: [],
-  darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
       colors: {
@@ -18,12 +16,8 @@ module.exports = {
       fahkwang: ['Fahkwang', 'sans-serif']
     }
   },
-  variants: {
-    extend: {}
-  },
-  plugins: [],
   content: [
-    './index.html',
-    './src/**/*.{vue,js,ts,jsx,tsx}'
+    './components/**/*.vue',
+    './pages/**/*.vue',
   ]
 };

@@ -6,8 +6,9 @@
 			<img src="/logo.png" alt="logo" width="300" class="sm:hidden" />
 			<p class="m-3" style="--order: 2">Easily communicate with person having hearing or speech disability.</p>
 			<nuxt-link to="/camera" style="--order: 3">
+				<!-- shadow-[0_0_10px_rgba(0,0,0,0.2)] -->
 				<button
-					class="m-3 px-8 py-3 rounded-full bg-turmeric font-fahkwang text-white shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]"
+					class="m-3 px-8 py-3 rounded-full bg-turmeric font-fahkwang text-white shadow-xl shadow-yellow-200/60 hover:-translate-y-6"
 				>
 					TRANSLATE
 				</button>

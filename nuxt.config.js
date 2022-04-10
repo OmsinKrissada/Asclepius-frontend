@@ -39,8 +39,6 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/typescript
     '@nuxt/typescript-build',
-    // https://go.nuxtjs.dev/tailwindcss
-    '@nuxtjs/tailwindcss'
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -51,6 +49,9 @@ export default {
     '@nuxtjs/pwa',
     '@nuxtjs/style-resources',
     '@nuxtjs/toast',
+    // https://go.nuxtjs.dev/tailwindcss
+    '@nuxtjs/tailwindcss'
+
     // 'vue-web-cam/nuxt'
     // 'nuxt-material-design-icons'
   ],
