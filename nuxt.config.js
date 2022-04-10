@@ -89,6 +89,6 @@ export default {
 
   publicRuntimeConfig: {
     wsHost: process.env.WS_HOST || 'localhost',
-    wsPort: process.env.WS_PORT || '3000',
+    wsPort: process.env.WS_PORT || '',
   },
 };

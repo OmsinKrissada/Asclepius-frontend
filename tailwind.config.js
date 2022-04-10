@@ -9,12 +9,13 @@ module.exports = {
         turmeric: '#e2d36b'
 
       },
+      fontFamily: {
+        krub: ['Krub', 'sans-serif'],
+        mitr: ['mitr', 'sans-serif'],
+        fahkwang: ['Fahkwang', 'sans-serif'],
+      }
+
     },
-    fontFamily: {
-      krub: ['Krub', 'sans-serif'],
-      mitr: ['mitr', 'sans-serif'],
-      fahkwang: ['Fahkwang', 'sans-serif']
-    }
   },
   content: [
     './components/**/*.vue',

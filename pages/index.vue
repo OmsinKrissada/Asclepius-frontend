@@ -5,10 +5,10 @@
 			<h2 id="name" class="m-3 font-mitr font-semibold text-blue text-6xl" style="--order: 1">ASCLEPIUS</h2>
 			<img src="/logo.png" alt="logo" width="300" class="sm:hidden" />
 			<p class="m-3" style="--order: 2">Easily communicate with person having hearing or speech disability.</p>
-			<nuxt-link to="/camera" style="--order: 3">
+			<nuxt-link to="/camera" style="--order: 3" class="hover:-translate-y-3">
 				<!-- shadow-[0_0_10px_rgba(0,0,0,0.2)] -->
 				<button
-					class="m-3 px-8 py-3 rounded-full bg-turmeric font-fahkwang text-white shadow-xl shadow-yellow-200/60 hover:-translate-y-6"
+					class="m-3 px-8 py-3 rounded-3xl hover:rounded-lg bg-turmeric font-fahkwang text-white shadow-xl shadow-amber-300/30 hover:shadow-yellow-600/40 hover:bg-yellow-600 transition-all"
 				>
 					TRANSLATE
 				</button>
@@ -39,7 +39,6 @@ export default class Index extends Vue {}
 #left {
 	* {
 		opacity: 0;
-		transform: translateY(-100%);
 
 		animation: dropIn 1s forwards;
 		animation-delay: calc(var(--order) * 100ms);

@@ -8,12 +8,12 @@
 			</div>
 		</nuxt-link>
 		<div class="flex items-center">
-			<button class="m-2 px-3 py-1 font-krub">English</button>
+			<!-- <button class="m-2 px-3 py-1 font-krub">English</button> -->
 
 			<nuxt-link to="/how_it_works">
 				<button class="m-2 px-3 py-1 mdi mdi-help-circle-outline text-3xl" />
 			</nuxt-link>
-			<button class="m-2 px-3 py-1 mdi mdi-menu mdi-close text-3xl" />
+			<!-- <button class="m-2 px-3 py-1 mdi mdi-menu mdi-close text-3xl" /> -->
 		</div>
 	</div>
 </template>
