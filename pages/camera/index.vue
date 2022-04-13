@@ -102,13 +102,22 @@ export default class Camera extends Vue {
 				this.media_error = "Please allow camera permission on your web browser.";
 				navigator.mediaDevices
 					.getUserMedia({ video: true })
-					.then(() => location.reload())
+					.then((stream) => {
+						this.media_error = "";
+						stream.getTracks()[0].stop();
+					})
 					.catch(() => {
 						this.media_error = "Please allow camera permission on your web browser.";
 					});
 			}
 		} else {
 			this.media_error = "Unfortunately, we do not detect webcam on your browser.";
+			navigator.mediaDevices
+				.getUserMedia({ video: true })
+				.then(() => location.reload())
+				.catch(() => {
+					this.media_error = "Please allow camera permission on your web browser.";
+				});
 		}
 	}
 
