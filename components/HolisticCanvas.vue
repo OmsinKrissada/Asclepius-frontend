@@ -10,7 +10,7 @@
 			</p>
 		</div>
 		<video ref="input_video" class="hidden" />
-		<canvas ref="output_canvas" class="bg-gray-200 rounded-3xl m-0 max-w-full" width="400px" height="400px" />
+		<canvas ref="output_canvas" class="bg-gray-200 rounded-3xl m-0 max-w-full" width="640" height="360" />
 	</div>
 </template>
 
@@ -164,8 +164,8 @@ export default class HolisticCanvas extends Vue {
 			onFrame: async () => {
 				await holistic.send({ image: videoElement });
 			},
-			width: 700,
-			height: 700,
+			width: 1280,
+			height: 720,
 		});
 
 		this.loading_text = "Loading resources . . .";
