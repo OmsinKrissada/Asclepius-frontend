@@ -13,6 +13,7 @@ module.exports = {
         krub: ['Krub', 'sans-serif'],
         mitr: ['mitr', 'sans-serif'],
         fahkwang: ['Fahkwang', 'sans-serif'],
+        inter: ['Inter', 'sans-serif'],
       }
 
     },

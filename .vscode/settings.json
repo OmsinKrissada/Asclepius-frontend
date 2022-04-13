@@ -1,0 +1,4 @@
+{
+	"appService.defaultWebAppToDeploy": "/subscriptions/89385e0d-1275-4fb8-ae5a-c1344df39e75/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/asclepius-frontend",
+	"appService.deploySubpath": "."
+}

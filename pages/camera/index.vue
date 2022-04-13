@@ -1,14 +1,34 @@
 <template>
 	<div class="flex flex-col justify-evenly">
-		<div class="flex flex-col justify-evenly items-center">
+		<div v-if="media_error">
+			<p class="m-2 text-3xl text-center font-mitr">{{ media_error }}</p>
+			<p class="m-5 text-lg text-center font-inter">Press reload if you think the problem is fixed.</p>
+			<button
+				@click="reload"
+				class="block mx-auto mt-10 px-8 py-3 rounded-lg bg-teal-500 font-fahkwang text-white shadow-xl shadow-teal-300/30 hover:shadow-teal-600/40 hover:bg-teal-600 transition-all"
+			>
+				RELOAD NOW
+			</button>
+		</div>
+		<div v-if="!media_error" class="flex flex-col justify-evenly items-center">
 			<HolisticCanvas
 				v-if="useMode == 1"
-				@holis="onHolis"
+				@holis_word="onHolisWord"
 				class="border-2 border-black rounded-3xl shadow-xl overflow-hidden"
 			/>
-			<HandCanvas
+			<LetterCanvas
 				v-else-if="useMode == 2"
-				@mh="onMultiHand"
+				@mh="onMultihandLetter"
+				class="border-2 border-black rounded-3xl shadow-xl overflow-hidden"
+			/>
+			<IllnessCanvas
+				v-else-if="useMode == 3"
+				@holis_ill="onHolisIll"
+				class="border-2 border-black rounded-3xl shadow-xl overflow-hidden"
+			/>
+			<NumberCanvas
+				v-else-if="useMode == 4"
+				@mh_num="onMultihandNum"
 				class="border-2 border-black rounded-3xl shadow-xl overflow-hidden"
 			/>
 			<h3 v-if="useMode == 0" class="font-krub font-semibold">Choose your translation mode</h3>
@@ -16,25 +36,39 @@
 			<div class="m-5 rounded-3xl bg-slate-400 text-white flex justify-center shadow-md">
 				<button
 					@click="useMode = 1"
-					class="px-4 py-2 rounded-3xl hover:bg-slate-600 transition-colors"
+					class="px-4 py-2 rounded-3xl hover:bg-slate-600 font-semibold transition-colors"
 					:class="useMode == 1 ? 'bg-slate-500' : ''"
 				>
 					WORD
 				</button>
 				<button
 					@click="useMode = 2"
-					class="px-4 py-2 rounded-3xl hover:bg-slate-600 transition-colors"
+					class="px-4 py-2 rounded-3xl hover:bg-slate-600 font-semibold transition-colors"
 					:class="useMode == 2 ? 'bg-slate-500' : ''"
 				>
 					LETTER
 				</button>
+				<button
+					@click="useMode = 3"
+					class="px-4 py-2 rounded-3xl hover:bg-slate-600 font-semibold transition-colors"
+					:class="useMode == 3 ? 'bg-slate-500' : ''"
+				>
+					ILLNESS
+				</button>
+				<button
+					@click="useMode = 4"
+					class="px-4 py-2 rounded-3xl hover:bg-slate-600 font-semibold transition-colors"
+					:class="useMode == 4 ? 'bg-slate-500' : ''"
+				>
+					NUMBER
+				</button>
 			</div>
-			<p v-if="guess_str" class="font-mono">{{ guess_str }} {{ guess_confidence }}%</p>
+			<p v-if="guess_str != null" class="font-mono">{{ guess_str }} {{ guess_confidence.toFixed(2) }}%</p>
 			<!-- </div> -->
 		</div>
-		<div class="m-10">
-			<h3 class="font-krub text-xl font-bold">Transcription</h3>
-			<p class="p-5 bg-gray-100 font-mitr border-turmeric border-2 break-words">
+		<div v-if="!media_error" class="m-10">
+			<!-- <h3 class="font-krub text-xl font-bold">Transcription</h3> -->
+			<p class="p-5 border-turmeric border-2 bg-gray-100 font-inter break-words text-6xl">
 				{{ transcription }}
 			</p>
 		</div>
@@ -44,6 +78,7 @@
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
 import { io, Socket } from "socket.io-client";
+import DetectRTC from "detectrtc";
 
 @Component
 export default class Camera extends Vue {
@@ -59,16 +94,64 @@ export default class Camera extends Vue {
 
 	socket?: Socket;
 
-	mounted() {
-		// console.log(`ws://${this.hostParts[0]}:${this.$config.wsPort}`);
+	media_error = "";
+
+	checkMediaPerm() {
+		if (DetectRTC.hasWebcam) {
+			if (!DetectRTC.isWebsiteHasWebcamPermissions) {
+				this.media_error = "Please allow camera permission on your web browser.";
+				navigator.mediaDevices
+					.getUserMedia({ video: true })
+					.then(() => location.reload())
+					.catch(() => {
+						this.media_error = "Please allow camera permission on your web browser.";
+					});
+			}
+		} else {
+			this.media_error = "Unfortunately, we do not detect webcam on your browser.";
+		}
+	}
+
+	reload() {
+		location.reload();
+	}
+
+	created() {}
+
+	async mounted() {
+		DetectRTC.load(this.checkMediaPerm);
+
 		const fullUrl: string = this.$config.wsHost;
 		const protocol = fullUrl.match(/https?:\/\//)?.shift();
 		const [hostname, ...path] = fullUrl.slice(protocol?.length ?? 0).split("/");
+
+		// Handle socket.io internal functions
 		this.socket = io(`${protocol ?? ""}${hostname ?? ""}:${this.$config.wsPort}`, {
 			path: "/" + (path.join("/") || ""),
 		});
+		this.socket.on("connect", () => {
+			console.log("Connected to socket.io server");
+			this.$toast.success(`Connected to server`, {
+				position: "bottom-right",
+				duration: 3000,
+				iconPack: "fontawesome",
+				icon: "camera",
+				containerClass: "toast",
+			});
+		});
+		this.socket.on("connect_error", (err) => {
+			this.$toast.error(`socket.io failed: ${err}`, {
+				position: "bottom-right",
+				duration: 5000,
+				iconPack: "fontawesome",
+				icon: "camera",
+				containerClass: "toast",
+			});
+		});
+
+		// User-defined events
 		this.socket.on("letter", ({ letter, confidence }) => {
-			console.log(`Received character: ${letter}`);
+			console.log(`Received letter: ${letter}`);
 			this.guess_str = letter;
 			this.guess_confidence = confidence * 100;
 			this.letter_predictions.push(letter);
@@ -85,7 +168,7 @@ export default class Camera extends Vue {
 			}
 		});
 		this.socket.on("word", ({ word, confidence }) => {
-			console.log(`Received character: ${word}`);
+			console.log(`Received word: ${word}`);
 			this.guess_str = word;
 			this.guess_confidence = confidence * 100;
 			this.word_predictions.push(word);
@@ -103,16 +186,23 @@ export default class Camera extends Vue {
 		});
 	}
 
-	onHolis(result: any) {
-		this.socket!.emit("holis", result);
+	onHolisWord(result: any) {
+		this.socket!.emit("holis_word", result);
 	}
-
-	onMultiHand(landmarks: string[]) {
-		this.socket!.emit("mh", landmarks);
+	onHolisIll(result: any) {
+		console.log("in index");
+		this.socket!.emit("holis_ill", result);
+	}
+	onMultihandLetter(landmarks: string[]) {
+		this.socket!.emit("mh_letter", landmarks);
+	}
+	onMultihandNum(result: any) {
+		this.socket!.emit("mh_num", result);
 	}
 
 	beforeDestroy() {
-		this.socket!.close();
+		// console.log("Closing socket.io client");
+		// this.socket!.close();
 	}
 }
 </script>

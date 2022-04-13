@@ -32,12 +32,13 @@ import {
 	FACEMESH_RIGHT_EYEBROW,
 	POSE_LANDMARKS_LEFT,
 	POSE_LANDMARKS_RIGHT,
+	POSE_LANDMARKS,
 } from "@mediapipe/holistic";
 import { Camera } from "@mediapipe/camera_utils";
 import { drawLandmarks, drawConnectors, Data, lerp } from "@mediapipe/drawing_utils";
 
 @Component
-export default class HolisticCanvas extends Vue {
+export default class IllnessCanvas extends Vue {
 	loading = true;
 	loading_text = "Initiating . . .";
 	camera = null as Camera | null;
@@ -47,6 +48,10 @@ export default class HolisticCanvas extends Vue {
 		const videoElement = this.$refs.input_video as HTMLVideoElement;
 		const canvasElement = this.$refs.output_canvas as HTMLCanvasElement;
 		const canvasCtx = canvasElement.getContext("2d");
+
+		const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+		if (stream.getVideoTracks().length > 0) console.log("camera NOT available");
+		else console.log("camera available");
 
 		function onResults(results: Results, vueInstance: any) {
 			if (canvasCtx === null) {
@@ -65,13 +70,15 @@ export default class HolisticCanvas extends Vue {
 				results.faceLandmarks &&
 				results.leftHandLandmarks &&
 				results.rightHandLandmarks
-			)
-				vueInstance.$emit("holis_word", {
+			) {
+				console.log("in canvas");
+				vueInstance.$emit("holis_ill", {
 					pose: results.poseLandmarks,
 					face: results.faceLandmarks,
 					left: results.leftHandLandmarks,
 					right: results.rightHandLandmarks,
 				});
+			}
 
 			// Only overwrite existing pixels.
 			//   if (activeEffect === "mask" || activeEffect === "both") {
@@ -136,6 +143,11 @@ export default class HolisticCanvas extends Vue {
 				lineWidth: 5,
 			});
 			drawConnectors(canvasCtx, results.faceLandmarks, FACEMESH_LIPS, {
+				color: "#E0E0E0",
+				lineWidth: 5,
+			});
+
+			drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS, {
 				color: "#E0E0E0",
 				lineWidth: 5,
 			});

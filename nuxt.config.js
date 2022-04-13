@@ -17,6 +17,7 @@ export default {
       { href: 'https://fonts.googleapis.com/css2?family=Krub&display=swap', rel: 'stylesheet' },
       { href: 'https://fonts.googleapis.com/css2?family=Mitr&display=swap', rel: 'stylesheet' },
       { href: 'https://fonts.googleapis.com/css2?family=Fahkwang&display=swap', rel: 'stylesheet' },
+      { href: 'https://fonts.googleapis.com/css2?family=Inter&display=swap', rel: 'stylesheet' },
     ]
   },
 

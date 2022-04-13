@@ -1,18 +1,18 @@
 <template>
-  <div class="flex flex-col justify-evenly">
-    <div class="flex flex-col justify-evenly items-center sm:flex-row">
-      <Canvas @lh="onLeftHand" @rh="onRightHand" @result="onResult" />
-      <div class="text-blue font-bold">
-        <p>Switch language</p>
-      </div>
-    </div>
-    <div class="m-10">
-      <h3 class="font-krub text-xl font-bold">Transcription</h3>
-      <p class="p-5 bg-gray-100 font-mitr border-turmeric border-2">
-        {{ transcription }}
-      </p>
-    </div>
-  </div>
+	<div class="flex flex-col justify-evenly">
+		<div class="flex flex-col justify-evenly items-center sm:flex-row">
+			<Canvas @lh="onLeftHand" @rh="onRightHand" @result="onResult" />
+			<div class="text-blue font-bold">
+				<p>Switch language</p>
+			</div>
+		</div>
+		<div class="m-10">
+			<h3 class="font-krub text-xl font-bold">Transcription</h3>
+			<p class="p-5 bg-gray-100 font-mitr border-turmeric border-2">
+				{{ transcription }}
+			</p>
+		</div>
+	</div>
 </template>
 
 <script lang="ts">
@@ -23,30 +23,30 @@ const socket = io("ws://localhost:8081");
 
 @Component
 export default class Camera extends Vue {
-  transcription = "";
-  // socket: null as SocketIOClient.Socket | null
-  mounted() {
-    socket.on("char", (char) => {
-      this.transcription += char;
-      console.log(`Received character: ${char}`);
-    });
-    socket.on("word", (word) => {
-      this.transcription += " " + word;
-      console.log(`Received word: ${word}`);
-    });
-  }
+	transcription = "";
+	// socket: null as SocketIOClient.Socket | null
+	mounted() {
+		socket.on("char", (char) => {
+			this.transcription += char;
+			console.log(`Received character: ${char}`);
+		});
+		socket.on("word", (word) => {
+			this.transcription += " " + word;
+			console.log(`Received word: ${word}`);
+		});
+	}
 
-  onResult(result: any) {
-    socket.emit("result", result);
-  }
+	onResult(result: any) {
+		socket.emit("result", result);
+	}
 
-  onLeftHand(landmarks: string[]) {
-    socket.emit("lh", landmarks);
-  }
+	onLeftHand(landmarks: string[]) {
+		socket.emit("lh", landmarks);
+	}
 
-  onRightHand(landmarks: string[]) {
-    socket.emit("rh", landmarks);
-  }
+	onRightHand(landmarks: string[]) {
+		socket.emit("rh", landmarks);
+	}
 }
 </script>
 
