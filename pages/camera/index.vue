@@ -82,6 +82,7 @@ import DetectRTC from "detectrtc";
 
 @Component
 export default class Camera extends Vue {
+	[x: string]: any;
 	useMode = 0;
 	transcription = "";
 	guess_str: string | null = null;
@@ -125,22 +126,21 @@ export default class Camera extends Vue {
 		location.reload();
 	}
 
-	created() {
-		console.log("created");
-	}
-
 	async mounted() {
-		console.log("mounted");
 		DetectRTC.load(this.checkMediaPerm);
 
-		const fullUrl: string = this.$config.wsHost;
-		const protocol = fullUrl.match(/https?:\/\//)?.shift();
-		const [hostname, ...path] = fullUrl.slice(protocol?.length ?? 0).split("/");
+		// const fullUrl: string = this.$config.wsHost;
+		// const protocol = fullUrl.match(/https?:\/\//)?.shift();
+		// const [hostname, ...path] = fullUrl.slice(protocol?.length ?? 0).split("/");
 
 		// Handle socket.io internal functions
-		this.socket = io(`${protocol ?? ""}${hostname ?? ""}:${this.$config.wsPort}`, {
-			path: "/" + (path.join("/") || ""),
+		this.socket = this.$nuxtSocket({
+			path: this.$config.wsPath,
 		});
+		if (!this.socket) {
+			console.error("Socket not initialized");
+			return;
+		}
 		this.socket.on("connect_error", (err) => {
 			this.$toast.error(`socket.io failed: ${err}`, {
 				position: "bottom-right",

@@ -8,7 +8,7 @@ export default {
       { hid: 'og-title', property: 'og:title', content: 'ASCLEPIUS - ASL TO ENGLISH' },
       { hid: 'og-desc', property: 'og:description', content: 'Easily communicate with person having hearing or speech disability.' },
       { name: 'format-detection', content: 'telephone=no' },
-      { hid: 'og-image', property: 'og:image', content: 'https://asclepius.krissada.com/logo.png' },
+      { hid: 'og-image', property: 'og:image', content: '/logo.png' },
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
@@ -53,7 +53,8 @@ export default {
     '@nuxtjs/style-resources',
     '@nuxtjs/toast',
     // https://go.nuxtjs.dev/tailwindcss
-    '@nuxtjs/tailwindcss'
+    '@nuxtjs/tailwindcss',
+    'nuxt-socket-io',
 
     // 'vue-web-cam/nuxt'
     // 'nuxt-material-design-icons'
@@ -72,15 +73,15 @@ export default {
     }
   },
 
-  // i18n: {
-  //   locales: ['en', 'th'],
-  //   strategy: 'no_prefix',
-  //   defaultLocale: 'th',
-  //   vueI18nLoader: true,
-  //   vueI18n: {
-  //     fallbackLocale: 'en'
-  //   }
-  // },
+  io: {
+    // module options
+    sockets: [{
+      name: 'main',
+      url: `${process.env.WS_HOST}:${process.env.WS_PORT || ''}`,
+      default: true,
+
+    }]
+  },
 
   styleResources: {
     scss: ['./assets/*.scss']
@@ -93,5 +94,6 @@ export default {
   publicRuntimeConfig: {
     wsHost: process.env.WS_HOST,
     wsPort: process.env.WS_PORT,
+    wsPath: process.env.WS_PATH,
   },
 };
