@@ -72,15 +72,15 @@ export default {
     }
   },
 
-  i18n: {
-    locales: ['en', 'th'],
-    strategy: 'no_prefix',
-    defaultLocale: 'th',
-    vueI18nLoader: true,
-    vueI18n: {
-      fallbackLocale: 'en'
-    }
-  },
+  // i18n: {
+  //   locales: ['en', 'th'],
+  //   strategy: 'no_prefix',
+  //   defaultLocale: 'th',
+  //   vueI18nLoader: true,
+  //   vueI18n: {
+  //     fallbackLocale: 'en'
+  //   }
+  // },
 
   styleResources: {
     scss: ['./assets/*.scss']

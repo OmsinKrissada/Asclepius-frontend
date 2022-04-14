@@ -125,9 +125,12 @@ export default class Camera extends Vue {
 		location.reload();
 	}
 
-	created() {}
+	created() {
+		console.log("created");
+	}
 
 	async mounted() {
+		console.log("mounted");
 		DetectRTC.load(this.checkMediaPerm);
 
 		const fullUrl: string = this.$config.wsHost;
@@ -138,20 +141,20 @@ export default class Camera extends Vue {
 		this.socket = io(`${protocol ?? ""}${hostname ?? ""}:${this.$config.wsPort}`, {
 			path: "/" + (path.join("/") || ""),
 		});
-		this.socket.on("connect", () => {
-			console.log("Connected to socket.io server");
-			this.$toast.success(`Connected to server`, {
+		this.socket.on("connect_error", (err) => {
+			this.$toast.error(`socket.io failed: ${err}`, {
 				position: "bottom-right",
-				duration: 3000,
+				duration: 5000,
 				iconPack: "fontawesome",
 				icon: "camera",
 				containerClass: "toast",
 			});
 		});
-		this.socket.on("connect_error", (err) => {
-			this.$toast.error(`socket.io failed: ${err}`, {
+		this.socket.on("connect", () => {
+			console.log("Connected to socket.io server");
+			this.$toast.success(`Connected to server`, {
 				position: "bottom-right",
-				duration: 5000,
+				duration: 3000,
 				iconPack: "fontawesome",
 				icon: "camera",
 				containerClass: "toast",
@@ -210,8 +213,10 @@ export default class Camera extends Vue {
 	}
 
 	beforeDestroy() {
-		// console.log("Closing socket.io client");
-		// this.socket!.close();
+		console.log("Closing socket.io client");
+		if (this.socket?.connected) {
+			this.socket.close();
+		}
 	}
 }
 </script>
