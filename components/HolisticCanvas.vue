@@ -60,12 +60,7 @@ export default class HolisticCanvas extends Vue {
 
 			vueInstance.loading = false;
 
-			if (
-				results.poseLandmarks &&
-				results.faceLandmarks &&
-				results.leftHandLandmarks &&
-				results.rightHandLandmarks
-			)
+			if (results)
 				vueInstance.$emit("holis_word", {
 					pose: results.poseLandmarks,
 					face: results.faceLandmarks,

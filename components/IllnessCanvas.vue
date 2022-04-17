@@ -65,13 +65,7 @@ export default class IllnessCanvas extends Vue {
 
 			vueInstance.loading = false;
 
-			if (
-				results.poseLandmarks &&
-				results.faceLandmarks &&
-				results.leftHandLandmarks &&
-				results.rightHandLandmarks
-			) {
-				console.log("in canvas");
+			if (results) {
 				vueInstance.$emit("holis_ill", {
 					pose: results.poseLandmarks,
 					face: results.faceLandmarks,
