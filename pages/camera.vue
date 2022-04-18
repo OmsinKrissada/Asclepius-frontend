@@ -11,28 +11,14 @@
 			</button>
 		</div>
 		<div v-if="!media_error" class="flex flex-col justify-evenly items-center">
-			<HolisticCanvas
-				v-if="useMode == 1"
-				@holis_word="onHolisWord"
-				class="border-2 border-black rounded-3xl shadow-xl overflow-hidden"
-			/>
-			<LetterCanvas
-				v-else-if="useMode == 2"
-				@mh="onMultihandLetter"
-				class="border-2 border-black rounded-3xl shadow-xl overflow-hidden"
-			/>
-			<IllnessCanvas
-				v-else-if="useMode == 3"
-				@holis_ill="onHolisIll"
-				class="border-2 border-black rounded-3xl shadow-xl overflow-hidden"
-			/>
-			<NumberCanvas
-				v-else-if="useMode == 4"
-				@mh_num="onMultihandNum"
+			<Canvas
+				v-if="useMode"
+				:mode="useMode % 2 == 0 ? 'hand' : 'holistic'"
+				@holis="onHolisOutput"
+				@mh="onHandOutput"
 				class="border-2 border-black rounded-3xl shadow-xl overflow-hidden"
 			/>
 			<h3 v-if="useMode == 0" class="font-krub font-semibold">Choose your translation mode</h3>
-			<!-- <div class="text-blue font-bold"> -->
 			<div class="m-5 rounded-3xl bg-slate-400 text-white flex justify-center shadow-md">
 				<button
 					@click="useMode = 1"
@@ -129,13 +115,13 @@ export default class Camera extends Vue {
 	async mounted() {
 		DetectRTC.load(this.checkMediaPerm);
 
-		// const fullUrl: string = this.$config.wsHost;
-		// const protocol = fullUrl.match(/https?:\/\//)?.shift();
-		// const [hostname, ...path] = fullUrl.slice(protocol?.length ?? 0).split("/");
-
 		// Handle socket.io internal functions
 		this.socket = this.$nuxtSocket({
 			path: this.$config.wsPath,
+			reconnection: true,
+			reconnectionAttempts: Infinity,
+			reconnectionDelay: 1000,
+			reconnectionDelayMax: 5000,
 		});
 		if (!this.socket) {
 			console.error("Socket not initialized");
@@ -155,6 +141,15 @@ export default class Camera extends Vue {
 			this.$toast.success(`Connected to server`, {
 				position: "bottom-right",
 				duration: 3000,
+				iconPack: "fontawesome",
+				icon: "camera",
+				containerClass: "toast",
+			});
+		});
+		this.socket.on("disconnect", () => {
+			this.$toast.error(`Disconnected from server`, {
+				position: "bottom-right",
+				duration: 5000,
 				iconPack: "fontawesome",
 				icon: "camera",
 				containerClass: "toast",
@@ -191,25 +186,21 @@ export default class Camera extends Vue {
 				this.word_predictions.every((p) => p === this.word_predictions[0])
 			) {
 				if (word != this.latest_word_prediction) {
-					this.transcription += word;
+					this.transcription += word + " ";
 				}
 				this.latest_word_prediction = word;
 			}
 		});
 	}
 
-	onHolisWord(result: any) {
-		this.socket!.emit("holis_word", result);
+	onHolisOutput(result: any) {
+		if (this.useMode == 1) this.socket!.emit("holis_word", result);
+		else if (this.useMode == 3) this.socket!.emit("holis_ill", result);
 	}
-	onHolisIll(result: any) {
-		console.log("in index");
-		this.socket!.emit("holis_ill", result);
-	}
-	onMultihandLetter(landmarks: string[]) {
-		this.socket!.emit("mh_letter", landmarks);
-	}
-	onMultihandNum(result: any) {
-		this.socket!.emit("mh_num", result);
+
+	onHandOutput(result: any) {
+		if (this.useMode == 2) this.socket!.emit("mh_letter", result);
+		else if (this.useMode == 4) this.socket!.emit("mh_num", result);
 	}
 
 	beforeDestroy() {

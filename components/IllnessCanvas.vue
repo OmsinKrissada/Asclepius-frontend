@@ -141,10 +141,10 @@ export default class IllnessCanvas extends Vue {
 				lineWidth: 5,
 			});
 
-			drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS, {
-				color: "#E0E0E0",
-				lineWidth: 5,
-			});
+			// drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS, {
+			// 	color: "#E0E0E0",
+			// 	lineWidth: 5,
+			// });
 
 			canvasCtx.restore();
 		}

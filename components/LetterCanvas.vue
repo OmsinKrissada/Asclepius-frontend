@@ -43,18 +43,17 @@ export default class HandCanvas extends Vue {
 			canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
 			canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
 			vueInstance.loading = false;
-			if (results.multiHandLandmarks) {
-				if (results.multiHandLandmarks.length > 0) vueInstance.$emit("mh", results.multiHandLandmarks);
-				for (const landmarks of results.multiHandLandmarks) {
-					drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, {
-						color: "#00FF00",
-						lineWidth: 5,
-					});
-					drawLandmarks(canvasCtx, landmarks, {
-						color: "#FF0000",
-						lineWidth: 2,
-					});
-				}
+			if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0)
+				vueInstance.$emit("mh_letter", results.multiHandLandmarks);
+			for (const landmarks of results.multiHandLandmarks) {
+				drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, {
+					color: "#00FF00",
+					lineWidth: 5,
+				});
+				drawLandmarks(canvasCtx, landmarks, {
+					color: "#FF0000",
+					lineWidth: 2,
+				});
 			}
 			canvasCtx.restore();
 		}

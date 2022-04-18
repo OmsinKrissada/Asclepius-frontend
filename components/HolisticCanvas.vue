@@ -9,8 +9,15 @@
 				{{ loading_text }}
 			</p>
 		</div>
-		<video ref="input_video" class="hidden" />
-		<canvas ref="output_canvas" class="bg-gray-200 rounded-3xl m-0 max-w-full" width="640" height="360" />
+		<video id="input_video" ref="input_video" class="hidden" />
+		<canvas
+			id="output_canvas"
+			ref="output_canvas"
+			class="bg-gray-200 rounded-3xl m-0 max-w-full"
+			width="640"
+			height="360"
+		/>
+		<Script type="text/partytown" src="http://localhost:3000/result.js" />
 	</div>
 </template>
 
