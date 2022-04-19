@@ -1,10 +1,18 @@
 <template>
 	<div class="flex flex-col sm:flex-row justify-center items-center my-10">
 		<div id="left" class="flex flex-col items-center">
-			<p class="m-3 text-2xl" style="--order: 0">Welcome</p>
-			<h2 id="name" class="m-3 font-mitr font-semibold text-blue text-6xl text-shadow-[-5px_3px_0px_#e2d36b]" style="--order: 1">ASCLEPIUS</h2>
+			<p class="m-3 text-2xl drop-shadow-lg" style="--order: 0">Welcome</p>
+			<h2
+				id="name"
+				class="m-3 font-mitr font-semibold text-blue text-6xl drop-shadow-[-5px_3px_0px_#e2d36b]"
+				style="--order: 1"
+			>
+				ASCLEPIUS
+			</h2>
 			<img src="/logo.png" alt="logo" width="300" class="sm:hidden" />
-			<p class="m-3" style="--order: 2">Easily communicate with person having hearing or speech disability.</p>
+			<p class="m-3 drop-shadow-lg text-center" style="--order: 2">
+				Easily communicate with person having hearing or speech disability.
+			</p>
 			<nuxt-link to="/camera" style="--order: 3" class="hover:-translate-y-3">
 				<!-- shadow-[0_0_10px_rgba(0,0,0,0.2)] -->
 				<button

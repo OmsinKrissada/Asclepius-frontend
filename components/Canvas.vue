@@ -18,7 +18,7 @@ v
 <script lang="ts">
 // holistic -> word
 // multihand -> char
-import { Vue, Component } from "vue-property-decorator";
+import { Vue, Component, Watch, Prop } from "vue-property-decorator";
 import {
 	Holistic,
 	POSE_CONNECTIONS,
@@ -38,16 +38,12 @@ import { Hands, Results as HandResults } from "@mediapipe/hands";
 import { Camera } from "@mediapipe/camera_utils";
 import { drawLandmarks, drawConnectors, Data, lerp } from "@mediapipe/drawing_utils";
 
-@Component({
-	props: {
-		mode: {
-			type: String,
-			default: "holistic",
-		},
-	},
-})
+@Component
 export default class Canvas extends Vue {
-	mode?: "holistic" | "hand";
+	@Prop({ default: "holistic" }) readonly mode!: "holistic" | "hand";
+	@Prop() readonly camId?: string;
+	// mode?: "holistic" | "hand";
+	// camId?: string;
 	loading = true;
 	loading_text = "Initiating . . .";
 	camera = null as Camera | null;
@@ -55,6 +51,9 @@ export default class Canvas extends Vue {
 	videoElement?: HTMLVideoElement;
 	canvasElement!: HTMLCanvasElement;
 	canvasCtx!: CanvasRenderingContext2D | null;
+
+	hands!: Hands;
+	holistic!: Holistic;
 
 	onHolisticResults(results: HolisticResults) {
 		if (this.canvasCtx === null) {
@@ -162,21 +161,48 @@ export default class Canvas extends Vue {
 		this.canvasCtx.restore();
 	}
 
+	@Watch("mode", { immediate: true, deep: true })
+	onModeChange(value: string, _oldValue: string) {
+		console.log("the mode has changed to " + value);
+	}
+
+	@Watch("camId", { immediate: true, deep: true })
+	onCamIdChange(value: string, _oldValue: string) {
+		console.log("cam changed!");
+		console.log(this.camId);
+		navigator.mediaDevices
+			.getUserMedia({
+				video: { deviceId: { exact: value }, width: 1280, height: 720 },
+			})
+			.then((stream) => {
+				this.videoElement!.srcObject = stream;
+				if (this.holistic) this.holistic.reset();
+				if (this.hands) this.hands.reset();
+			});
+	}
+
 	async mounted() {
 		this.videoElement = this.$refs.input_video as HTMLVideoElement;
 		this.canvasElement = this.$refs.output_canvas as HTMLCanvasElement;
 		this.canvasCtx = this.canvasElement.getContext("2d");
-		const holistic = new Holistic({
+
+		console.log(this.camId);
+		const stream = navigator.mediaDevices.getUserMedia({
+			video: { deviceId: { exact: this.camId }, width: 1280, height: 720 },
+		});
+		this.videoElement!.srcObject = await stream;
+
+		this.holistic = new Holistic({
 			locateFile: (file) => {
 				return `https://cdn.jsdelivr.net/npm/@mediapipe/holistic/${file}`;
 			},
 		});
-		const hands = new Hands({
+		this.hands = new Hands({
 			locateFile: (file: string) => {
 				return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
 			},
 		});
-		holistic.setOptions({
+		this.holistic.setOptions({
 			modelComplexity: 1,
 			smoothLandmarks: true,
 			enableSegmentation: false,
@@ -186,34 +212,35 @@ export default class Canvas extends Vue {
 			minTrackingConfidence: 0.5,
 			selfieMode: true,
 		});
-		hands.setOptions({
+		this.hands.setOptions({
 			maxNumHands: 1,
 			modelComplexity: 1,
 			minDetectionConfidence: 0.5,
 			minTrackingConfidence: 0.5,
 			selfieMode: true,
 		});
-		holistic.onResults((results) => this.onHolisticResults(results));
-		hands.onResults((results) => this.onHandResults(results));
+		this.holistic.onResults((results) => this.onHolisticResults(results));
+		this.hands.onResults((results) => this.onHandResults(results));
 
 		this.camera = new Camera(this.videoElement, {
 			onFrame: async () => {
-				if (this.mode == "holistic") await holistic.send({ image: this.videoElement! });
-				else await hands.send({ image: this.videoElement! });
+				if (this.mode == "holistic") await this.holistic.send({ image: this.videoElement! });
+				else await this.hands.send({ image: this.videoElement! });
 			},
 			width: 1280,
 			height: 720,
 		});
 
 		this.loading_text = "Loading holistic resources . . .";
-		await holistic.initialize();
+		await this.holistic.initialize();
 		this.loading_text = "Loading multi-hand resources . . .";
-		await hands.initialize();
+		await this.hands.initialize();
 
 		try {
 			this.loading_text = "Opening camera . . .";
 			await this.camera.start();
 			console.log("started");
+			this.$emit("ready");
 			this.loading_text = "Starting . . .";
 		} catch (err) {
 			this.loading_text = "Cannot open camera";
