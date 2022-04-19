@@ -74,7 +74,10 @@ export default {
       name: 'main',
       url: `${process.env.WS_HOST}:${process.env.WS_PORT || ''}`,
       default: true,
-
+    },
+    {
+      name: 'alternative',
+      url: `https://asclepiusapi.krissada.com`,
     }]
   },
 

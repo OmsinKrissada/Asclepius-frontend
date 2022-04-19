@@ -182,10 +182,12 @@ export default class Camera extends Vue {
 	}
 
 	async mounted() {
+		if (!localStorage.getItem("endpoint")) localStorage.setItem("endpoint", "main");
 		DetectRTC.load(this.checkMediaPerm);
 
 		// Handle socket.io internal functions
 		this.socket = this.$nuxtSocket({
+			name: localStorage.getItem("endpoint"),
 			path: this.$config.wsPath,
 			reconnection: true,
 			reconnectionAttempts: Infinity,
