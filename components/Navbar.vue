@@ -3,7 +3,8 @@
 	<div class="relative flex justify-between items-center p-5 bg-blue text-white h-16 shadow-lg">
 		<nuxt-link to="/">
 			<div class="flex items-center cursor-pointer">
-				<img src="/logo.png" alt="" class="h-16 w-16" />
+				<!-- <img src="/logo.png" alt="" class="h-16 w-16" /> -->
+				<svg-logo-no-text class="h-16 w-16 py-2" />
 				<h1 class="font-krub font-bold hidden sm:block">ASCLEPIUS</h1>
 			</div>
 		</nuxt-link>
@@ -17,9 +18,3 @@
 		</div>
 	</div>
 </template>
-
-<script>
-export default {
-	name: "NuxtTutorial",
-};
-</script>
