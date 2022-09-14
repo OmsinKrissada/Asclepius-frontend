@@ -1,3 +1,5 @@
+const colors = require('tailwindcss/colors')
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   theme: {
     extend: {
@@ -5,8 +7,9 @@ module.exports = {
         magenta: '#d27ea7',
         cyan: '#b5dcdd',
         cream: '#f8efd4',
-        blue: '#61aac5',
-        turmeric: '#e2d36b'
+        fah: '#61aac5',
+        // turmeric: '#e2d36b'
+        turmeric: colors.yellow[400],
 
       },
       fontFamily: {

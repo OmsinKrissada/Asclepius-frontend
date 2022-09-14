@@ -1,6 +1,6 @@
 <template>
-	<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384.71 337.16" width="512"
-		height="512">
+	<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384.71 337.16" width="400"
+		height="400">
 		<title>asclepius</title>
 		<path
 			d="M194.1,46.4c-10.55.19-19.48,9.25-19.44,19.65s9.08,19.38,19.58,19.42a20,20,0,0,0,19.7-19.33C214.08,55.6,204.65,46.21,194.1,46.4Z"

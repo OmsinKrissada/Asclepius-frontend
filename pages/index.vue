@@ -2,7 +2,7 @@
 	<div class="flex-grow flex flex-col sm:flex-row justify-center items-center my-10">
 		<div id="left" class="flex flex-col items-center">
 			<p class="m-3 text-2xl drop-shadow-lg" style="--order: 0">Welcome</p>
-			<h2 id="name" class="m-3 font-mitr font-semibold text-blue text-6xl drop-shadow-[-5px_3px_0px_#e2d36b]"
+			<h2 id="name" class="m-3 font-mitr font-semibold text-fah text-6xl drop-shadow-[-5px_3px_0px_#e2d36b]"
 				style="--order: 1">
 				ASCLEPIUS
 			</h2>
@@ -11,10 +11,13 @@
 			<p class="m-3 drop-shadow-lg text-center" style="--order: 2">
 				Easily communicate with person having hearing or speech disability.
 			</p>
-			<nuxt-link to="/camera" style="--order: 3" class="hover:-translate-y-3">
+			<nuxt-link to="/translate" style="--order: 3" class="m-3">
 				<!-- shadow-[0_0_10px_rgba(0,0,0,0.2)] -->
+				<!-- <button
+					class="px-8 py-3 ring-4 ring-inset hover:ring-0 ring-yellow-500 hover:from-yellow-500 hover:to-orange-400 bg-gradient-to-br font-fahkwang hover:text-white hover:shadow-xl hover:shadow-yellow-500/40 rounded-md hover:rounded-lg transition-shadow"> -->
 				<button
-					class="m-3 px-8 py-3 rounded-3xl hover:rounded-lg bg-turmeric font-fahkwang text-white shadow-xl shadow-amber-300/30 hover:shadow-yellow-600/40 hover:bg-yellow-600 transition-all">
+					class="px-8 py-3 from-yellow-500 to-orange-400 bg-gradient-to-br font-fahkwang text-white shadow-xl shadow-yellow-500/40 rounded-lg transition-shadow">
+
 					TRANSLATE
 				</button>
 			</nuxt-link>

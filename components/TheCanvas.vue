@@ -1,23 +1,9 @@
-<template>
-	<div class="relative">
-		<div v-if="loadingText!==''"
-			class="flex flex-col justify-center items-center absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
-			<LoadingBar :loading="true" class="m-5" />
-			<p class="font-mitr text-lg">
-				{{ loadingText }}
-			</p>
-		</div>
-		<video ref="inputVideo" class="hidden" />
-		<canvas ref="outputCanvas" class="bg-gray-200 rounded-3xl m-0 max-w-full" width="640" height="360" />
-	</div>
-</template>
-
 <script setup lang="ts">
+
 // holistic -> word
 // multihand -> char
+
 import {
-	Holistic,
-	POSE_CONNECTIONS,
 	FACEMESH_TESSELATION,
 	HAND_CONNECTIONS,
 	Results as HolisticResults,
@@ -27,19 +13,23 @@ import {
 	FACEMESH_LIPS,
 	FACEMESH_RIGHT_EYE,
 	FACEMESH_RIGHT_EYEBROW,
-	POSE_LANDMARKS_LEFT,
-	POSE_LANDMARKS_RIGHT,
 	NormalizedLandmarkList,
 } from "@mediapipe/holistic";
 import { Hands, NormalizedLandmarkListList, Results as HandResults } from "@mediapipe/hands";
 import { Camera } from "@mediapipe/camera_utils";
 import { drawLandmarks, drawConnectors, Data, lerp } from "@mediapipe/drawing_utils";
-import { notify } from "@kyvg/vue3-notification";
+
+// workaround, have to do with @mediapipe/holistic being in CommonJS
+import pkg from '@mediapipe/holistic';
+const { Holistic } = pkg;
 
 const props = defineProps<{
-	mode: 'holistic' | 'hand',
-	camId: string;
+	mode: 'holistic' | 'hand' | '';
+	currentCamera: string;
+	enabled: boolean;
+	flip: boolean;
 }>();
+const reactiveProps = toRefs(props);
 
 const emits = defineEmits<{
 	(e: 'ready'): void,
@@ -55,21 +45,43 @@ const emits = defineEmits<{
 	(e: 'mh', result: NormalizedLandmarkListList): void;
 }>();
 
-const loadingText = ref("Initiating . . .");
-const started = false;
+const loadingText = ref("Initializing...");
 const inputVideo = ref<HTMLVideoElement>(null);
 const outputCanvas = ref<HTMLCanvasElement>(null);
 
+/* Note: can someone please explain to me why these computed ref don't work */
+// const videoWidth = computed(() => inputVideo.value?.videoWidth ?? 0);
+// const videoHeight = computed(() => inputVideo.value?.videoHeight ?? 0);
+
+// Camera Manager
 let camera: Camera;
 
-onMounted(async () => {
-	const canvasCtx = outputCanvas.value.getContext("2d");
-	console.log(props.camId);
+const { stream, enabled: camEnabled } = useUserMedia({
+	videoDeviceId: reactiveProps.currentCamera,
+});
 
-	const stream = navigator.mediaDevices.getUserMedia({
-		video: { deviceId: { exact: props.camId }, width: 1280, height: 720 },
-	});
-	inputVideo.value.srcObject = await stream;
+watch(() => props.enabled, async () => {
+	camEnabled.value = props.enabled;
+	if (props.enabled) {
+		loadingText.value = 'Processing frames...';
+		await camera.start();
+		loadingText.value = '';
+	}
+	else camera.stop();
+});
+
+watchEffect(() => {
+	if (inputVideo.value)
+		inputVideo.value.srcObject = stream.value!;
+});
+
+onMounted(async () => {
+	camEnabled.value = true;
+	const canvasCtx = outputCanvas.value.getContext("2d");
+	console.log(props.currentCamera);
+
+	console.log('Here is what Holistic looks like:');
+	console.log(Holistic);
 
 	const holistic = new Holistic({
 		locateFile: (file) => {
@@ -89,14 +101,14 @@ onMounted(async () => {
 		refineFaceLandmarks: false,
 		minDetectionConfidence: 0.5,
 		minTrackingConfidence: 0.5,
-		selfieMode: true,
+		selfieMode: false,
 	});
 	hands.setOptions({
 		maxNumHands: 1,
 		modelComplexity: 1,
 		minDetectionConfidence: 0.5,
 		minTrackingConfidence: 0.5,
-		selfieMode: true,
+		selfieMode: false,
 	});
 
 	const onHolisticResults = (results: HolisticResults) => {
@@ -188,7 +200,7 @@ onMounted(async () => {
 		}
 		canvasCtx.save();
 		canvasCtx.clearRect(0, 0, outputCanvas.value.width, outputCanvas.value.height);
-		canvasCtx.drawImage(results.image, 0, 0, outputCanvas.value.width, outputCanvas.value.height);
+		// canvasCtx.drawImage(results.image, 0, 0, outputCanvas.value.width, outputCanvas.value.height);
 		loadingText.value = '';
 		if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0)
 			emits("mh", results.multiHandLandmarks);
@@ -208,58 +220,63 @@ onMounted(async () => {
 	holistic.onResults((results) => onHolisticResults(results));
 	hands.onResults((results) => onHandResults(results));
 
-	watch(() => props.camId, (newValue, _oldValue) => {
-		console.log("cam changed!");
-		console.log(props.camId);
-		navigator.mediaDevices
-			.getUserMedia({
-				video: { deviceId: { exact: newValue }, width: 1280, height: 720 },
-			})
-			.then((stream) => {
-				inputVideo.value.srcObject = stream;
-				if (holistic) holistic.reset();
-				if (hands) hands.reset();
-			});
-	});
-
 	camera = new Camera(inputVideo.value, {
 		onFrame: async () => {
-			if (props.mode === "holistic") await holistic.send({ image: inputVideo.value });
-			else await hands.send({ image: inputVideo.value });
-		},
-		width: 1280,
-		height: 720,
+			if (props.enabled) {
+				if (props.mode === "holistic") {
+					await holistic.send({ image: inputVideo.value });
+					loadingText.value = '';
+				}
+				else if (props.mode === "hand") {
+					await hands.send({ image: inputVideo.value });
+					loadingText.value = '';
+				};
+			}
+		}
 	});
 
-	loadingText.value = "Loading holistic resources . . .";
+	loadingText.value = "Loading holistic resources...";
 	await holistic.initialize();
-	loadingText.value = "Loading multi-hand resources . . .";
+	loadingText.value = "Loading multi-hand resources...";
 	await hands.initialize();
-
-	try {
-		loadingText.value = "Opening camera . . .";
-		await camera.start();
-		console.log("started");
-		emits('ready');
-		loadingText.value = "Starting . . .";
-	} catch (err) {
-		loadingText.value = "Cannot open camera";
-		notify({
-			title: 'Please allow permission to camera',
-			type: 'error'
-		});
-	}
+	loadingText.value = "Starting camera...";
+	await camera.start();
+	loadingText.value = '';
 });
 
 watch(() => props.mode, (newValue, _oldValue) => {
 	console.log("the mode has changed to " + newValue);
+	if (props.enabled) loadingText.value = 'Processing frames...';
 });
 
 
-onBeforeUnmount(() => {
+onBeforeUnmount(async () => {
+	camEnabled.value = false;
 	if (camera) {
 		console.log("Destroying camera");
-		camera.stop();
+		await camera.stop();
 	}
 });
 </script>
+
+<template>
+	<div class="relative">
+		<LoadingOverlay :message="loadingText" />
+		<LoadingBar :loading="!!loadingText" class="m-5" />
+		<!-- <p v-if="!enabled" class="p-4 font-mitr text-lg">
+			{{loadingText||'Camera Is Off'}}
+		</p> -->
+		<div class="relative flex justify-center items-center transition-all">
+			<video ref="inputVideo" autoplay muted class="z-10 h-100 w-auto" :class="{flip:flip}" />
+			<canvas ref="outputCanvas" class="z-20 absolute inset-0 w-full h-full rounded-3xl m-0 max-w-full"
+				:class="{flip:flip}" :width="inputVideo?.videoWidth??0" :height="inputVideo?.videoHeight??0" />
+		</div>
+		<!-- {{inputVideo?inputVideo.videoWidth:0}} -->
+	</div>
+</template>
+
+<style scoped>
+.flip {
+	transform: rotateY(180deg);
+}
+</style>
