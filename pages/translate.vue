@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { io } from "socket.io-client";
 import Chevron from "~~/components/svg/Chevron.vue";
-import { VideoCameraIcon, VideoCameraSlashIcon } from '@heroicons/vue/20/solid';
+// import { VideoCameraIcon, VideoCameraSlashIcon } from '@heroicons/vue/20/solid';
 
 const config = useRuntimeConfig().public;
 

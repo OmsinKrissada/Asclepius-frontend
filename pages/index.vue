@@ -1,22 +1,23 @@
 <template>
 	<div class="flex-grow flex flex-col sm:flex-row justify-center items-center my-10">
 		<div id="left" class="flex flex-col items-center">
-			<p class="m-3 text-2xl drop-shadow-lg" style="--order: 0">Welcome</p>
-			<h2 id="name" class="m-3 font-mitr font-semibold text-fah text-6xl drop-shadow-[-5px_3px_0px_#e2d36b]"
+			<p class="m-3 text-2xl" style="--order: 0">Welcome</p>
+			<h2 id="name"
+				class="m-3 font-mitr font-semibold text-blue-500 text-6xl drop-shadow-[-5px_3px_0px_lightblue]"
 				style="--order: 1">
 				ASCLEPIUS
 			</h2>
 			<!-- <img src="/logo.png" alt="logo" width="300" class="sm:hidden" /> -->
 			<svg-logo class="sm:hidden w-screen h-fit px-8 " />
-			<p class="m-3 drop-shadow-lg text-center" style="--order: 2">
+			<p class="m-3 text-center" style="--order: 2">
 				Easily communicate with person having hearing or speech disability.
 			</p>
 			<nuxt-link to="/translate" style="--order: 3" class="m-3">
 				<!-- shadow-[0_0_10px_rgba(0,0,0,0.2)] -->
 				<!-- <button
-					class="px-8 py-3 ring-4 ring-inset hover:ring-0 ring-yellow-500 hover:from-yellow-500 hover:to-orange-400 bg-gradient-to-br font-fahkwang hover:text-white hover:shadow-xl hover:shadow-yellow-500/40 rounded-md hover:rounded-lg transition-shadow"> -->
+					class="px-8 py-3 ring-4 ring-inset hover:ring-0 ring-teal-500 hover:from-teal-600 hover:to-green-500 bg-gradient-to-r font-fahkwang hover:text-white hover:shadow-xl hover:shadow-teal-500/40 rounded-md hover:rounded-lg transition-shadow"> -->
 				<button
-					class="px-8 py-3 from-yellow-500 to-orange-400 bg-gradient-to-br font-fahkwang text-white shadow-xl shadow-yellow-500/40 rounded-lg transition-shadow">
+					class="px-8 py-3 from-teal-500 to-green-400 focus:from-teal-600 focus:to-green-500 bg-gradient-to-r font-[sans-serif] text-white shadow hover:shadow-lg hover:shadow-teal-500/40 rounded-lg transition-all">
 
 					TRANSLATE
 				</button>
