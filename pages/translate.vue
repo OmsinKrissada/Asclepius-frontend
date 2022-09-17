@@ -38,7 +38,7 @@ const isCamAllowed = computed(() => camPermission.value === 'granted' || camPerm
 const isSelfieMode = ref(false);
 
 function checkMediaPerm() {
-	console.log('checking media perm');
+	console.log('checking media permission');
 	console.log(camPermission.value);
 	watchEffect(() => {
 		if (camPermission.value === 'denied')
@@ -77,7 +77,8 @@ function addLetter(letter: string, confidence: number) {
 		letter_predictions.every((p) => p === letter_predictions[0])
 	) {
 		if (letter != latest) {
-			transcription.value[transcription.value.length - 1] += letter;
+			if (transcription.value.length === 0) transcription.value.push(letter);
+			else transcription.value[transcription.value.length - 1] += '' + letter;
 			latest = letter;
 		}
 	}
