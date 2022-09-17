@@ -102,14 +102,14 @@ onMounted(async () => {
 		refineFaceLandmarks: false,
 		minDetectionConfidence: 0.5,
 		minTrackingConfidence: 0.5,
-		selfieMode: false,
+		selfieMode: true,
 	});
 	hands.setOptions({
 		maxNumHands: 1,
 		modelComplexity: 1,
 		minDetectionConfidence: 0.5,
 		minTrackingConfidence: 0.5,
-		selfieMode: false,
+		selfieMode: true,
 	});
 
 	const onHolisticResults = (results: HolisticResults) => {
@@ -270,7 +270,7 @@ onBeforeUnmount(async () => {
 		<div class="relative flex justify-center items-center transition-all">
 			<video ref="inputVideo" autoplay muted class="z-10 h-100 w-auto" :class="{flip:flip}" />
 			<canvas ref="outputCanvas" class="z-20 absolute inset-0 w-full h-full rounded-3xl m-0 max-w-full"
-				:class="{flip:flip}" :width="inputVideo?.videoWidth??0" :height="inputVideo?.videoHeight??0" />
+				:class="{flip:!flip}" :width="inputVideo?.videoWidth??0" :height="inputVideo?.videoHeight??0" />
 		</div>
 		<!-- {{inputVideo?inputVideo.videoWidth:0}} -->
 	</div>
