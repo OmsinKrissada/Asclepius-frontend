@@ -80,6 +80,7 @@ onMounted(async () => {
 	const canvasCtx = outputCanvas.value.getContext("2d");
 	console.log(props.currentCamera);
 
+	// this chunk for debugging the bundler
 	console.log('Here is what Holistic looks like:');
 	console.log(Holistic);
 
