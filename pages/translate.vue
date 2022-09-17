@@ -34,14 +34,14 @@ const { videoInputs: cameras } = useDevicesList({
 
 const mediaError = ref('Checking permissions...');
 const camEnabled = ref(false);
-const isCamAllowed = computed(() => camPermission.value === 'granted');
+const isCamAllowed = computed(() => camPermission.value === 'granted' || camPermission.value === 'prompt');
 const isSelfieMode = ref(false);
 
 function checkMediaPerm() {
 	console.log('checking media perm');
 	console.log(camPermission.value);
 	watchEffect(() => {
-		if (camPermission.value === 'prompt' || camPermission.value === 'denied')
+		if (camPermission.value === 'denied')
 			mediaError.value = "Please allow camera on your browser.";
 		console.log(camPermission.value);
 	});
@@ -60,7 +60,7 @@ function changeSource(event: any) {
 /* Result callbacks */
 
 const guess = reactive<{ str: string, confidence: number; }>({ str: '', confidence: 0 });
-const transcription = ref<string[]>(['the', 'first', 'phrase']);
+const transcription = ref<string[]>([]);
 const latest = ref('');
 const currentType = ref('');
 
@@ -199,9 +199,10 @@ onBeforeUnmount(() => {
 
 			<!-- Menus -->
 			<div class="flex flex-col space-y-5 w-full p-5 justify-self-end bg-slate-200 rounded-lg">
-				<h3 class="p-3 font-medium text-xl text-slate-800">Settings</h3>
+				<h3 class="p-3 font-fahkwang font-bold text-xl text-slate-800">Settings</h3>
 				<div class="relative">
-					<select name="cam" @change="changeSource"
+					<label for="cam" class="font-medium">Select camera: </label>
+					<select name="cam" id="cam" @change="changeSource"
 						class="h-10 pl-3 pr-6 text-base bg-sky-600 text-white border rounded-lg appearance-none focus:shadow-outline">
 						<option v-for="cam in cameras" :key="cam.deviceId" :value="cam.deviceId">{{ cam.label }}
 						</option>
