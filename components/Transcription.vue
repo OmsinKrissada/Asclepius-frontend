@@ -31,7 +31,7 @@ const zoomOut = () => textSize.value -= 0.1;
 			</div>
 			<div class="w-full h-0.5 mt-1 bg-sky-600 rounded" />
 		</div>
-		<div class="w-96 max-h-60 font-inter font-medium overflow-x-clip overflow-y-auto"
+		<div class="w-96 max-h-60 font-inter font-medium break-words overflow-y-auto"
 			:style="{'font-size':`${textSize}rem`}">
 			{{output}}
 		</div>
