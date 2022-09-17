@@ -61,45 +61,43 @@ function changeSource(event: any) {
 
 const guess = reactive<{ str: string, confidence: number; }>({ str: '', confidence: 0 });
 const transcription = ref<string[]>([]);
-const latest = ref('');
-const currentType = ref('');
 
-const letter_predictions = ref<string[]>([]);
+let latest = '';
+
+let letter_predictions = [];
 function addLetter(letter: string, confidence: number) {
 	console.debug(`Received letter: ${letter}`);
 	guess.str = letter;
 	guess.confidence = confidence * 100;
-	letter_predictions.value.push(letter);
-	letter_predictions.value = letter_predictions.value.slice(-5);
+	letter_predictions.push(letter);
+	letter_predictions = letter_predictions.slice(-5);
 
 	if (
-		letter_predictions.value.length >= 5 &&
-		letter_predictions.value.every((p) => p === letter_predictions.value[0])
+		letter_predictions.length >= 5 &&
+		letter_predictions.every((p) => p === letter_predictions[0])
 	) {
-		if (letter != latest.value) {
+		if (letter != latest) {
 			transcription.value[transcription.value.length - 1] += letter;
-			currentType.value = "letter";
-			latest.value = letter;
+			latest = letter;
 		}
 	}
 }
 
-const word_predictions = ref<string[]>([]);
+let word_predictions = [];
 function addWord(word: string, confidence: number) {
 	console.debug(`Received word: ${word}`);
 	guess.str = word;
 	guess.confidence = confidence * 100;
-	word_predictions.value.push(word);
-	word_predictions.value = word_predictions.value.slice(-5);
+	word_predictions.push(word);
+	word_predictions = word_predictions.slice(-5);
 
 	if (
-		word_predictions.value.length >= 5 &&
-		word_predictions.value.every((p) => p === word_predictions[0])
+		word_predictions.length >= 5 &&
+		word_predictions.every((p) => p === word_predictions[0])
 	) {
-		if (word != latest.value) {
+		if (word != latest) {
 			transcription.value.push(word);
-			currentType.value = "word";
-			latest.value = word;
+			latest = word;
 		}
 	}
 }
