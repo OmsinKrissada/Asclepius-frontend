@@ -20,12 +20,12 @@ const zoomOut = () => textSize.value -= 0.1;
 				<h3 class="font-fahkwang font-bold">Transcription</h3>
 				<div class="flex space-x-1 border-separate border-black border-spacing-3">
 					<button class="w-8 h-8 bg-slate-400 font-medium font-inter text-2xl text-white rounded-md"
-						@click="zoomIn">
-						+
-					</button>
-					<button class="w-8 h-8 bg-slate-400 font-medium font-inter text-2xl text-white rounded-md"
 						@click="zoomOut">
 						-
+					</button>
+					<button class="w-8 h-8 bg-slate-400 font-medium font-inter text-2xl text-white rounded-md"
+						@click="zoomIn">
+						+
 					</button>
 				</div>
 			</div>
