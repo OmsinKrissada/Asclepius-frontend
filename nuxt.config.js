@@ -1,7 +1,13 @@
-import { defineNuxtConfig } from "nuxt";
-
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
+	app: {
+		head: {
+			title: 'ASCLEPIUS | ASL to Text',
+			meta: [
+				{ name: 'description', content: 'Easily communicate with person having hearing or speech disability.' }
+			]
+		}
+	},
 	modules: ["@nuxtjs/google-fonts", "@nuxtjs/tailwindcss", "@vueuse/nuxt"],
 	googleFonts: {
 		families: {
