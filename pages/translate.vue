@@ -120,7 +120,7 @@ function registerSocket(server: { id: string, url: string; }) {
 		console.error('connect_error');
 		tryCountPerAttempt++;
 		loadingText.value = `Attempting reconnect, trying alternate server [${server.id}] (${tryCount})...`;
-		if (tryCountPerAttempt > 4) {
+		if (tryCountPerAttempt > 2) {
 			socket.disconnect();
 			socket.removeAllListeners();
 			registerSocket(servers[tryCount++ % servers.length]);
@@ -187,12 +187,12 @@ onBeforeUnmount(() => {
 
 		<section v-if="isCamAllowed && wsReady" class="flex flex-col self-stretch justify-evenly items-center">
 			<div class="relative">
-				<TheCanvas :mode="modes[currentMode]??''" :currentCamera="currentCamera" :enabled="camEnabled"
+				<TheCanvas :mode="modes[currentMode] ?? ''" :currentCamera="currentCamera" :enabled="camEnabled"
 					:flip="isSelfieMode" @holis="onHolisOutput" @mh="onHandOutput"
 					class="border-2 border-black rounded-lg shadow-xl" />
 				<p v-if="guess.str !== ''"
 					class="absolute z-50 left-0 right-0 bottom-0 py-5 rounded-lg from-black/50 to-transparent bg-gradient-to-t font-mono font-medium text-center text-2xl text-white">
-					{{guess.str }} {{guess.confidence.toFixed(2)}}%
+					{{ guess.str }} {{ guess.confidence.toFixed(2) }}%
 				</p>
 			</div>
 
@@ -225,9 +225,11 @@ onBeforeUnmount(() => {
 			<div class="relative">
 				<ul class="flex space-x-2">
 					<li v-for="mode in modesArray" :value="mode">
-						<button @click="currentMode=mode"
+						<button @click="currentMode = mode"
 							class="px-3 py-2 bg-sky-700 bg-gradient-to-br font-medium text-white rounded transition-shadow shadow-black/50"
-							:class="{'to-sky-500':currentMode === mode, 'from-emerald-400':currentMode===mode,'shadow-md':currentMode===mode}">{{mode.toUpperCase()}}</button>
+							:class="{ 'to-sky-500': currentMode === mode, 'from-emerald-400': currentMode === mode, 'shadow-md': currentMode === mode }">{{
+									mode.toUpperCase()
+							}}</button>
 					</li>
 				</ul>
 			</div>

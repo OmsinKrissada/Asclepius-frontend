@@ -7,7 +7,7 @@ export default defineNuxtConfig({
 		families: {
 			Krub: true,
 			Mitr: true,
-			Inter: true,
+			Inter: [400, 500, 600, 700],
 		},
 	},
 	runtimeConfig: {
@@ -17,8 +17,7 @@ export default defineNuxtConfig({
 			wsPath: "",
 		},
 	},
-	debug:true,
-	builder:'webpack',
+	builder: 'webpack',
 	vite: {
 		optimizeDeps: {
 			include: [
@@ -59,7 +58,7 @@ export default defineNuxtConfig({
 		},
 		build: {
 			minify: false,
-			
+
 			// commonjsOptions:{
 			// 	in
 			// }
