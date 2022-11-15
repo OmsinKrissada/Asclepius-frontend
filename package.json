@@ -17,6 +17,7 @@
 		"@mediapipe/drawing_utils": "^0.3.1620248257",
 		"@mediapipe/hands": "^0.4.1646424915",
 		"@mediapipe/holistic": "^0.5.1635989137",
+		"@vercel/analytics": "^0.1.5",
 		"socket.io-client": "^4.5.3"
 	},
 	"devDependencies": {
