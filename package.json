@@ -10,7 +10,7 @@
 		"postinstall": "nuxt prepare"
 	},
 	"dependencies": {
-		"@heroicons/vue": "^2.0.12",
+		"@heroicons/vue": "^2.0.13",
 		"@mdi/font": "^7.0.96",
 		"@mediapipe/camera_utils": "^0.3.1640029074",
 		"@mediapipe/control_utils": "^0.6.1629159505",
@@ -21,12 +21,14 @@
 		"socket.io-client": "^4.5.3"
 	},
 	"devDependencies": {
-		"@nuxt/webpack-builder": "^3.0.0-rc.12",
+		"@nuxt/webpack-builder": "^3.0.0",
 		"@nuxtjs/google-fonts": "^3.0.0-0",
-		"@nuxtjs/tailwindcss": "^6.1.1",
 		"@types/crypto-js": "^4.1.1",
-		"@vueuse/core": "^9.3.1",
-		"@vueuse/nuxt": "^9.3.1",
-		"nuxt": "^3.0.0-rc.12"
+		"@vueuse/core": "^9.6.0",
+		"@vueuse/nuxt": "^9.6.0",
+		"autoprefixer": "^10.4.13",
+		"nuxt": "^3.0.0",
+		"postcss": "^8.4.19",
+		"tailwindcss": "^3.2.4"
 	}
 }

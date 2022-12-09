@@ -1,4 +1,4 @@
-const colors = require('tailwindcss/colors')
+const colors = require('tailwindcss/colors');
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   theme: {
@@ -22,8 +22,11 @@ module.exports = {
     },
   },
   content: [
-    './components/**/*.vue',
-    './pages/**/*.vue',
-    './layouts/**/*.vue',
-  ]
+    "./components/**/*.{js,vue,ts}",
+    "./layouts/**/*.vue",
+    "./pages/**/*.vue",
+    "./plugins/**/*.{js,ts}",
+    "./nuxt.config.{js,ts}",
+    "./app.vue",
+  ],
 };
